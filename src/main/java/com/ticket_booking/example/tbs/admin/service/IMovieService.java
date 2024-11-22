@@ -11,6 +11,9 @@ public interface IMovieService {
     //add movie
     Movie addMovie(MovieDto movieDto);
 
+    //get movie by id
+    Movie getMovie(long movieId);
+
     //get all movies by release date
     List<Movie> getMovies(String releaseDate);
 

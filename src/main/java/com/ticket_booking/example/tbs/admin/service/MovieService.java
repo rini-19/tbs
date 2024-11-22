@@ -38,6 +38,16 @@ public class MovieService implements IMovieService{
     }
 
     @Override
+    public Movie getMovie(long movieId) {
+        try {
+            return movieRepository.findById(movieId).orElse(null);
+        } catch (Throwable ex) {
+            log.error(ex.getMessage());
+        }
+        return null;
+    }
+
+    @Override
     public List<Movie> getMovies(String date) {
         try {
             LocalDate formattedDate = LocalDate.parse(date);
