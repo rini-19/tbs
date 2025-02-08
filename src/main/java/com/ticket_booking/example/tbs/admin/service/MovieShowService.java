@@ -64,6 +64,16 @@ public class MovieShowService implements IMovieShowService{
     }
 
     @Override
+    public MovieShow getShowById(long showId) {
+        try {
+            return movieShowRepository.findById(showId).orElse(null);
+        } catch (Throwable ex) {
+            log.error(ex.getMessage());
+        }
+        return null;
+    }
+
+    @Override
     public List<MovieShow> getAllShowsByLocation(long cityId) {
         try {
             return movieShowRepository.findAllByLocation(cityId);

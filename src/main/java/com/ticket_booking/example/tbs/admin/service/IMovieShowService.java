@@ -12,6 +12,9 @@ public interface IMovieShowService {
     // remove show
     void removeShow(long showId);
 
+    // get show by id
+    MovieShow getShowById(long showId);
+
     // get all shows by location
     List<MovieShow> getAllShowsByLocation(long cityId);
 
