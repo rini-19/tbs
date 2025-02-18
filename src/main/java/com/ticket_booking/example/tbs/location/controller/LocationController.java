@@ -7,19 +7,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/city")
+//@RequestMapping("/api/city")
 public class LocationController {
 
     @Autowired
     private ILocationService locationService;
 
-    @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/api/city/add")
     public ResponseEntity<?> addLocation(@RequestBody LocationDto locDto) {
         Location location = locationService.addLocation(locDto);
         if(location == null) {
@@ -29,7 +31,7 @@ public class LocationController {
         }
     }
 
-    @GetMapping("/all-cities")
+    @GetMapping("/apiV1/city/all-cities")
     ResponseEntity<?> getAllLocations() {
         List<Location> locations = locationService.getAllLocations();
         if(locations == null) {
@@ -39,7 +41,7 @@ public class LocationController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/apiV1/city/{id}")
     ResponseEntity<?> getLocationById(@PathVariable("id") Long id) {
         Location location = locationService.getLocationById(id);
         if(location == null) {

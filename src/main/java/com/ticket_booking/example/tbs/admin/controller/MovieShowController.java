@@ -7,19 +7,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("api/show")
+//@RequestMapping("api/show")
 public class MovieShowController {
 
     @Autowired
     IMovieShowService movieShowService;
 
-    @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("api/show/add")
     ResponseEntity<?> addMovieShow(@RequestBody MovieShowDto movieShowDto) {
         MovieShow show = movieShowService.addShow(movieShowDto);
         if(show != null) {
@@ -29,7 +31,7 @@ public class MovieShowController {
         }
     }
 
-    @GetMapping("/location/{id}")
+    @GetMapping("apiV1/show/location/{id}")
     ResponseEntity<?> getShowsByLocation(@PathVariable long id) {
         List<MovieShow> movieShows = movieShowService.getAllShowsByLocation(id);
         if(!movieShows.isEmpty()) {
@@ -39,7 +41,7 @@ public class MovieShowController {
         }
     }
 
-    @GetMapping("/movie/{id}")
+    @GetMapping("apiV1/show/movie/{id}")
     ResponseEntity<?> getShowsByMovie(@PathVariable long id) {
         List<MovieShow> movieShows = movieShowService.getAllShowsByMovieId(id);
         if(!movieShows.isEmpty()) {
@@ -49,7 +51,7 @@ public class MovieShowController {
         }
     }
 
-    @GetMapping("/screen/{movieId}/{screenId}")
+    @GetMapping("apiV1/show/screen/{movieId}/{screenId}")
     ResponseEntity<?> getShowsByMovieIdAndScreenId(@PathVariable long movieId, @PathVariable long screenId) {
         List<MovieShow> movieShows = movieShowService.getAllShowsByMovieIdAndScreenId(movieId, screenId);
         if(!movieShows.isEmpty()) {
@@ -59,7 +61,7 @@ public class MovieShowController {
         }
     }
 
-    @GetMapping("/cinema/{movieId}/{cinemaId}")
+    @GetMapping("apiV1/show/cinema/{movieId}/{cinemaId}")
     ResponseEntity<?> getShowsByMovieIdAndCinemaId(@PathVariable long movieId, @PathVariable long cinemaId) {
         List<MovieShow> movieShows = movieShowService.getAllShowsByMovieIdAndCinemaId(movieId, cinemaId);
         if(!movieShows.isEmpty()) {
@@ -69,7 +71,8 @@ public class MovieShowController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("api/show/{id}")
     ResponseEntity<?> removeShow(@PathVariable long id) {
         movieShowService.removeShow(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

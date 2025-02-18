@@ -7,11 +7,13 @@ import com.ticket_booking.example.tbs.user.model.UserDto;
 import com.ticket_booking.example.tbs.user.repository.IAuthRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 public class AuthService implements IAuthService {
+    private BCryptPasswordEncoder encoder=new BCryptPasswordEncoder(12);
 
     @Autowired
     ILocationService locationService;
@@ -30,7 +32,7 @@ public class AuthService implements IAuthService {
             user.setLocation(location);
             user.setMobileNumber(userDto.getMobileNumber());
             user.setPincode(userDto.getPincode());
-            user.setPassword(userDto.getPassword());
+            user.setPassword(encoder.encode(userDto.getPassword()));
             user.setRole(userDto.getRole());
             return authRepository.save(user);
         } catch (Throwable ex) {

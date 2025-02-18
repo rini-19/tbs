@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +17,14 @@ import java.util.List;
 
 @Controller
 @Slf4j
-@RequestMapping("api/seat")
+//@RequestMapping("api/seat")
 public class SeatController {
 
     @Autowired
     ISeatService seatService;
 
-    @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("api/seat/add")
     public ResponseEntity<?> addSeats(@RequestBody SeatDto seatDto) {
         List<Seat> seats = seatService.addSeats(seatDto.getScreenId());
         if(seats.isEmpty()) {
@@ -32,7 +34,8 @@ public class SeatController {
         }
     }
 
-    @PostMapping("/add/show-seats")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("api/seat/add/show-seats")
     public ResponseEntity<?> addShowSeats(@RequestBody ShowSeatDto showSeatDto) {
         List<ShowSeat> seats = seatService.addShowSeats(showSeatDto);
         if(seats.isEmpty()) {
@@ -42,7 +45,7 @@ public class SeatController {
         }
     }
 
-    @GetMapping("/show/{showId}")
+    @GetMapping("apiV1/seat/show/{showId}")
     public ResponseEntity<?> getSeatsByShowId(@PathVariable long showId) {
         List<ShowSeat> seats = seatService.getSeatsByShowId(showId);
         if(seats.isEmpty()) {

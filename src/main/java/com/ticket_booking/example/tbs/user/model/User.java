@@ -17,8 +17,6 @@ public class User {
     private long mobileNumber;
     private String password;
     private String role;
-
-    @Column(unique = true, nullable = false)
     private int pincode;
 
     @ManyToOne

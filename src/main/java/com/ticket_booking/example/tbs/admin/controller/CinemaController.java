@@ -7,19 +7,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("api/cinema")
+//@RequestMapping("api/cinema")
 public class CinemaController {
 
     @Autowired
     private ICinemaService cinemaService;
 
-    @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("api/cinema/add")
     public ResponseEntity<?> addCinema(@RequestBody CinemaDto cinemaDto) {
         Cinema cinema = cinemaService.addCinema(cinemaDto);
         if(cinema == null) {
@@ -29,7 +31,7 @@ public class CinemaController {
         }
     }
 
-    @GetMapping("/all-cinemas/{cityId}")
+    @GetMapping("apiV1/cinema/all-cinemas/{cityId}")
     public ResponseEntity<?> getAllCinemas(@PathVariable long cityId) {
         List<Cinema> cinemas = cinemaService.getAllCinemaByLocation(cityId);
         if(cinemas == null || cinemas.isEmpty()) {
@@ -39,7 +41,7 @@ public class CinemaController {
         }
     }
 
-    @GetMapping("/{cinemaId}")
+    @GetMapping("apiV1/cinema/{cinemaId}")
     public ResponseEntity<?> getCinema(@PathVariable long cinemaId) {
         Cinema cinema = cinemaService.getCinema(cinemaId);
         if(cinema == null) {
@@ -49,7 +51,8 @@ public class CinemaController {
         }
     }
 
-    @PutMapping("/{cinemaId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("api/cinema/{cinemaId}")
     public ResponseEntity<?> updateCinema(@RequestBody CinemaDto cinemaDto, @PathVariable long cinemaId) {
         Cinema cinema = cinemaService.updateCinema(cinemaId, cinemaDto);
         if(cinema == null) {
@@ -59,7 +62,8 @@ public class CinemaController {
         }
     }
 
-    @DeleteMapping("/{cinemaId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("api/cinema/{cinemaId}")
     public ResponseEntity<?> deleteCinema(@PathVariable long cinemaId) {
         cinemaService.deleteCinema(cinemaId);
         return new ResponseEntity<>("Delete cinema successfully", HttpStatus.OK);
